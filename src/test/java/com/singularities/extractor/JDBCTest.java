@@ -11,12 +11,18 @@ import java.sql.Statement;
 
 class JDBCTest {
   private static Connection connection;
-  private static String connectionUrl;
   private static String user;
   private static String password;
+  private static String host;
+  private static int port;
+  private static String connectionUrl;
 
-  static String getConnectionUrl() {
-    return connectionUrl;
+  static String getHost() {
+    return host;
+  }
+
+  static int getPort() {
+    return port;
   }
 
   static String getUser() {
@@ -29,12 +35,12 @@ class JDBCTest {
 
   @BeforeAll
   static void setUpAll() throws SQLException {
-    String host = Preconditions.checkNotNull(
+    host = Preconditions.checkNotNull(
         System.getenv("DATA_EXTRACTOR_MSSQL_HOST"),
         "DATA_EXTRACTOR_MSSQL_HOST");
-    String port = Preconditions.checkNotNull(
+    port = Integer.valueOf(Preconditions.checkNotNull(
         System.getenv("DATA_EXTRACTOR_MSSQL_PORT"),
-        "DATA_EXTRACTOR_MSSQL_PORT");
+        "DATA_EXTRACTOR_MSSQL_PORT"));
     user = Preconditions.checkNotNull(
         System.getenv("DATA_EXTRACTOR_MSSQL_USER"),
         "DATA_EXTRACTOR_MSSQL_USER");
@@ -44,8 +50,7 @@ class JDBCTest {
     connectionUrl = String.format(
         "jdbc:sqlserver://%s:%s;"
             + "user=%s;"
-            + "password=%s;"
-            + "loginTimeout=30;",
+            + "password=%s;",
         host,
         port,
         user,

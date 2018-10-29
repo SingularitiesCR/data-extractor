@@ -6,9 +6,11 @@ import java.util.Properties;
 public final class JdbcQueryBuilder {
   public long fetchSize;
   Properties connectionProperties;
-  String connectionUrl;
   String table;
   String columnName;
+  String provider;
+  String host;
+  int port;
   long lowerBound;
   long upperBound;
   int numPartitions;
@@ -18,8 +20,18 @@ public final class JdbcQueryBuilder {
     return this;
   }
 
-  public JdbcQueryBuilder setConnectionUrl(String connectionUrl) {
-    this.connectionUrl = connectionUrl;
+  public JdbcQueryBuilder setProvider(String provider) {
+    this.provider = provider;
+    return this;
+  }
+
+  public JdbcQueryBuilder setHost(String host) {
+    this.host = host;
+    return this;
+  }
+
+  public JdbcQueryBuilder setPort(int port) {
+    this.port = port;
     return this;
   }
 

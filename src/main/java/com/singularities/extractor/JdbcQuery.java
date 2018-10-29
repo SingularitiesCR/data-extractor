@@ -11,19 +11,22 @@ import java.util.Properties;
 @SuppressWarnings("WeakerAccess")
 public final class JdbcQuery {
   private final Properties connectionProperties;
-  private final String connectionUrl;
   private final String table;
   private final String columnName;
   private final long lowerBound;
   private final long upperBound;
   private final int numPartitions;
   private final long fetchSize;
+  private final String host;
+  private final int port;
+  private final String provider;
 
   JdbcQuery(JdbcQueryBuilder builder) {
     connectionProperties = Preconditions.checkNotNull(
         builder.connectionProperties, "ConnectionProperties");
-    connectionUrl = Preconditions.checkNotNull(
-        builder.connectionUrl, "ConnectionUrl");
+    host = Preconditions.checkNotNull(builder.host, "Host");
+    port = builder.port;
+    provider = Preconditions.checkNotNull(builder.provider, "Provider");
     table = Preconditions.checkNotNull(
         builder.table, "Table");
     columnName = Preconditions.checkNotNull(
@@ -32,10 +35,29 @@ public final class JdbcQuery {
     upperBound = builder.upperBound;
     numPartitions = builder.numPartitions;
     fetchSize = builder.fetchSize;
+    validate();
   }
 
   public static JdbcQueryBuilder newBuilder() {
     return new JdbcQueryBuilder();
+  }
+
+  private void validate() {
+    Preconditions.checkArgument(!host.isEmpty(), "empty Host");
+    Preconditions.checkArgument(0 < port && port <= 65535,
+        "expected 0 <= Port <= 65535, got Port={}",
+        port);
+    Preconditions.checkArgument(!table.isEmpty(), "empty Table");
+    Preconditions.checkArgument(!columnName.isEmpty(), "empty ColumnName");
+    Preconditions.checkArgument(lowerBound < upperBound,
+        "expected LowerBound < UpperBound, got {} < {}",
+        lowerBound, upperBound);
+    Preconditions.checkArgument(0 < numPartitions,
+        "expected 0 < NumPartitions, got NumPartitions={}",
+        numPartitions);
+    Preconditions.checkArgument(0 <= fetchSize,
+        "expected 0 < FetchSize, got FetchSize={}",
+        fetchSize);
   }
 
   public long getFetchSize() {
@@ -47,7 +69,7 @@ public final class JdbcQuery {
   }
 
   public String getConnectionUrl() {
-    return connectionUrl;
+    return String.format("jdbc:%s://%s:%d", provider, host, port);
   }
 
   public String getTable() {

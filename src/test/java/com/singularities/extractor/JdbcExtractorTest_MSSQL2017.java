@@ -47,7 +47,9 @@ class JdbcExtractorTest_MSSQL2017 extends JDBCTest {
     connectionProperties.put("socketTimeout", "60000");
     connectionProperties.put("lockTimeout", "60000");
     JdbcQuery pJdbcQuery = JdbcQuery.newBuilder()
-        .setConnectionUrl(getConnectionUrl())
+        .setHost(getHost())
+        .setPort(getPort())
+        .setProvider("sqlserver")
         .setTable("Person")
         .setColumnName("ID")
         .setLowerBound(0L)
