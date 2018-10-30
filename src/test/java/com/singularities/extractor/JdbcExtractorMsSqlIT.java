@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-class JdbcExtractorTest_MSSQL2017 extends JDBCTest {
+class JdbcExtractorMsSqlIT extends JdbcTest {
   private static final int MAX_INSERT_ROWS = 1000;
   private DataFrameReader mDataFrameReader;
   private SQLContext sqlContext;
@@ -30,7 +30,7 @@ class JdbcExtractorTest_MSSQL2017 extends JDBCTest {
     // Spark
     SparkConf sparkConf = new SparkConf(true)
         .setMaster("local[*]")
-        .setAppName(JdbcExtractorTest_MSSQL2017.class.getSimpleName());
+        .setAppName(JdbcExtractorMsSqlIT.class.getSimpleName());
     SparkContext sc = SparkContext.getOrCreate(sparkConf);
     sqlContext = SQLContext.getOrCreate(sc);
     mDataFrameReader = spy(sqlContext.read());

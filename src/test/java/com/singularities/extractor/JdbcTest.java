@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-class JDBCTest {
+class JdbcTest {
   private static Connection connection;
   private static String user;
   private static String password;

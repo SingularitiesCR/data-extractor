@@ -9,7 +9,6 @@
     <name>Data Extractor</name>
     <packaging>jar</packaging>
     <version>0.1.0</version>
-
     <properties>
         <!--
             Dependency Versions
@@ -38,6 +37,14 @@
         <scala.version>2.11</scala.version>
         <spark.version>2.3.2</spark.version>
     </properties>
+    <!-- Distribution -->
+    <distributionManagement>
+        <repository>
+            <id>singularities-release</id>
+            <name>Singularities S3 Maven Repository</name>
+            <url>s3://maven.singularities.com/release</url>
+        </repository>
+    </distributionManagement>
     <!-- Repositories -->
     <repositories>
         <repository>
