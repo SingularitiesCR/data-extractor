@@ -5,4 +5,4 @@
 - service: deploy
   name: Deploy
   command: mvn deploy
-  tag: local
+  tag: master
