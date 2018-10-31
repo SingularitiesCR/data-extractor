@@ -1,4 +1,4 @@
-FROM maven:3.5
+FROM maven:3.5-jdk-8
 WORKDIR /opt/data-extractor
 ARG MAVEN_SERVER_ID
 ARG MAVEN_SERVER_USERNAME
