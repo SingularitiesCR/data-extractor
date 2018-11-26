@@ -16,5 +16,7 @@ RUN mkdir -p /root/.m2 && \
     echo "</settings>" >> $MAVEN_SETTINGS && \
     cat $MAVEN_SETTINGS
 COPY pom.xml .
-COPY src .
 RUN mvn -q dependency:go-offline
+COPY src .
+COPY codeship/Deploy/deploy.sh .
+ENTRYPOINT [ "/bin/sh" ]

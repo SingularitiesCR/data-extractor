@@ -1,8 +1,8 @@
-- service: test
-  name: Test
-  command: mvn -q verify
-  tag: ^(master|feature)
+#- service: test
+#  name: Test
+#  command: mvn -q verify
+#  tag: ^(master|feature)
 - service: deploy
   name: Deploy
-  command: mvn -q deploy
+  command: deploy.sh
   tag: master
