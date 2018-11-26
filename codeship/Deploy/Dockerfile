@@ -17,4 +17,4 @@ RUN mkdir -p /root/.m2 && \
     cat $MAVEN_SETTINGS
 COPY pom.xml .
 COPY src .
-RUN mvn dependency:go-offline
+RUN mvn -q dependency:go-offline
