@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 class JdbcExtractorMsSqlIT extends JdbcTest {
   private static final int MAX_INSERT_ROWS = 1000;
@@ -86,16 +87,18 @@ class JdbcExtractorMsSqlIT extends JdbcTest {
     // Instance
     final JdbcExtractor extractor = new JdbcExtractor(mDataFrameReader);
     // Call
-    extractor.extractIntoParquet(pJdbcQuery, pParquetUrl);
-    final Dataset<Row> aParquet = sqlContext.read().parquet(pParquetUrl);
+    final Dataset<Row> aParquet = extractor.extractIntoParquet(pJdbcQuery, pParquetUrl);
+    final Dataset<Row> eParquet = sqlContext.read().parquet(pParquetUrl);
     // Assertions
     verify(mDataFrameReader).jdbc(pJdbcQuery.getConnectionUrl(),
         pJdbcQuery.getTable(), pJdbcQuery.getColumnName(),
         pJdbcQuery.getLowerBound(), pJdbcQuery.getUpperBound(),
         pJdbcQuery.getNumPartitions(), eConnectionProperties);
+    assertEquals(eParquet, aParquet);
     assertEquals(eTotalRows, aParquet.count());
     assertArrayEquals(eColumns, aParquet.columns());
     assertEquals(eRow, aParquet.select("FirstName", "LastName", "Age")
         .toJavaRDD().first().mkString(","));
+    verifyNoMoreInteractions(mDataFrameReader);
   }
 }
