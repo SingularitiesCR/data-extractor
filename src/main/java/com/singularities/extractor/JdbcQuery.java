@@ -1,5 +1,6 @@
 package com.singularities.extractor;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 import java.util.Properties;
@@ -90,5 +91,28 @@ public final class JdbcQuery {
 
   public int getNumPartitions() {
     return numPartitions;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    JdbcQuery jdbcQuery = (JdbcQuery) o;
+    return lowerBound == jdbcQuery.lowerBound &&
+        upperBound == jdbcQuery.upperBound &&
+        numPartitions == jdbcQuery.numPartitions &&
+        fetchSize == jdbcQuery.fetchSize &&
+        port == jdbcQuery.port &&
+        Objects.equal(connectionProperties, jdbcQuery.connectionProperties) &&
+        Objects.equal(table, jdbcQuery.table) &&
+        Objects.equal(columnName, jdbcQuery.columnName) &&
+        Objects.equal(host, jdbcQuery.host) &&
+        Objects.equal(provider, jdbcQuery.provider);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(connectionProperties, table, columnName,
+        lowerBound, upperBound, numPartitions, fetchSize, host, port, provider);
   }
 }
