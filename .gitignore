@@ -1,3 +1,7 @@
+### Codeship
+codeship.aes
+args.env
+
 ### Maven
 target/
 

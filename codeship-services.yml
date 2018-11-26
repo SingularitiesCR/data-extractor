@@ -1,0 +1,23 @@
+mssql:
+  image: microsoft/mssql-server-linux:2017-CU11
+  environment:
+    ACCEPT_EULA: Y
+    SA_PASSWORD: P4ssW0rd
+
+test:
+  build:
+    image: data-extractor/test
+    dockerfile: codeship/Test/Dockerfile
+  environment:
+    DATA_EXTRACTOR_MSSQL_HOST: mssql
+    DATA_EXTRACTOR_MSSQL_PORT: 1433
+    DATA_EXTRACTOR_MSSQL_USER: sa
+    DATA_EXTRACTOR_MSSQL_PASSWORD: P4ssW0rd
+  depends_on:
+    - mssql
+
+deploy:
+  build:
+    image: data-extractor/deploy
+    dockerfile: codeship/Deploy/Dockerfile
+    encrypted_args_file: codeship/args.env.encrypted

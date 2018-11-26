@@ -25,8 +25,9 @@ public final class JdbcExtractor {
    *
    * @param query      the JDBC query.
    * @param parquetUrl the URL of the Parquet file.
+   * @return the extracted dataset of rows.
    */
-  public void extractIntoParquet(JdbcQuery query, String parquetUrl) {
+  public Dataset<Row> extractIntoParquet(JdbcQuery query, String parquetUrl) {
     final Properties connectionProperties = query.getConnectionProperties();
     connectionProperties.put(JDBC_FETCH_SIZE, String.valueOf(query.getFetchSize()));
     final Dataset<Row> rows = dataFrameReader.jdbc(
@@ -38,5 +39,6 @@ public final class JdbcExtractor {
         query.getNumPartitions(),
         connectionProperties);
     rows.write().parquet(parquetUrl);
+    return rows;
   }
 }

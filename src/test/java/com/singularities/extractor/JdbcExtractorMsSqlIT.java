@@ -19,8 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-class JdbcExtractorTest_MSSQL2017 extends JDBCTest {
+class JdbcExtractorMsSqlIT extends JdbcTest {
   private static final int MAX_INSERT_ROWS = 1000;
   private DataFrameReader mDataFrameReader;
   private SQLContext sqlContext;
@@ -30,7 +31,7 @@ class JdbcExtractorTest_MSSQL2017 extends JDBCTest {
     // Spark
     SparkConf sparkConf = new SparkConf(true)
         .setMaster("local[*]")
-        .setAppName(JdbcExtractorTest_MSSQL2017.class.getSimpleName());
+        .setAppName(JdbcExtractorMsSqlIT.class.getSimpleName());
     SparkContext sc = SparkContext.getOrCreate(sparkConf);
     sqlContext = SQLContext.getOrCreate(sc);
     mDataFrameReader = spy(sqlContext.read());
@@ -86,16 +87,18 @@ class JdbcExtractorTest_MSSQL2017 extends JDBCTest {
     // Instance
     final JdbcExtractor extractor = new JdbcExtractor(mDataFrameReader);
     // Call
-    extractor.extractIntoParquet(pJdbcQuery, pParquetUrl);
-    final Dataset<Row> aParquet = sqlContext.read().parquet(pParquetUrl);
+    final Dataset<Row> aParquet = extractor.extractIntoParquet(pJdbcQuery, pParquetUrl);
+    final Dataset<Row> eParquet = sqlContext.read().parquet(pParquetUrl);
     // Assertions
     verify(mDataFrameReader).jdbc(pJdbcQuery.getConnectionUrl(),
         pJdbcQuery.getTable(), pJdbcQuery.getColumnName(),
         pJdbcQuery.getLowerBound(), pJdbcQuery.getUpperBound(),
         pJdbcQuery.getNumPartitions(), eConnectionProperties);
+    assertEquals(eParquet, aParquet);
     assertEquals(eTotalRows, aParquet.count());
     assertArrayEquals(eColumns, aParquet.columns());
     assertEquals(eRow, aParquet.select("FirstName", "LastName", "Age")
         .toJavaRDD().first().mkString(","));
+    verifyNoMoreInteractions(mDataFrameReader);
   }
 }
