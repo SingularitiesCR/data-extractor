@@ -64,7 +64,8 @@ class JdbcExtractorMsSqlIT extends JdbcTest {
     // Expected
     final Properties eConnectionProperties =
         pJdbcQuery.getConnectionProperties();
-    eConnectionProperties.put(JdbcExtractor.JDBC_FETCH_SIZE, 1000);
+    eConnectionProperties.put(JdbcExtractor.PROPERTY_FETCH_SIZE, 1000);
+    eConnectionProperties.put(JdbcExtractor.PROPERTY_DRIVER, JdbcExtractor.DRIVER_SQL_SERVER);
     long eTotalRows = MAX_INSERT_ROWS * 1000;
     String[] eColumns = new String[]{"ID", "FirstName", "LastName", "Age"};
     String eRow = "FirstName,LastName,18";

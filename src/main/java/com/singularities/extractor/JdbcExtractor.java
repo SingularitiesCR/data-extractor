@@ -12,7 +12,9 @@ import java.util.Properties;
  */
 @SuppressWarnings("WeakerAccess")
 public final class JdbcExtractor {
-  static final String JDBC_FETCH_SIZE = "fetchsize";
+  static final String PROPERTY_FETCH_SIZE = "fetchsize";
+  static final String PROPERTY_DRIVER = "driver";
+  static final String DRIVER_SQL_SERVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
   private final DataFrameReader dataFrameReader;
 
   public JdbcExtractor(DataFrameReader dataFrameReader) {
@@ -29,7 +31,8 @@ public final class JdbcExtractor {
    */
   public Dataset<Row> extractIntoParquet(JdbcQuery query, String parquetUrl) {
     final Properties connectionProperties = query.getConnectionProperties();
-    connectionProperties.put(JDBC_FETCH_SIZE, String.valueOf(query.getFetchSize()));
+    connectionProperties.put(PROPERTY_FETCH_SIZE, String.valueOf(query.getFetchSize()));
+    connectionProperties.put(PROPERTY_DRIVER, DRIVER_SQL_SERVER);
     final Dataset<Row> rows = dataFrameReader.jdbc(
         query.getConnectionUrl(),
         query.getTable(),
