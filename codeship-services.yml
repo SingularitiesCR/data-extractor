@@ -3,16 +3,18 @@ mssql:
   environment:
     ACCEPT_EULA: Y
     SA_PASSWORD: P4ssW0rd
+  ports:
+    - "1433:1433"
 
 test:
   build:
     image: data-extractor/test
     dockerfile: codeship/Test/Dockerfile
   environment:
-    DATA_EXTRACTOR_MSSQL_HOST: mssql
-    DATA_EXTRACTOR_MSSQL_PORT: 1433
-    DATA_EXTRACTOR_MSSQL_USER: sa
-    DATA_EXTRACTOR_MSSQL_PASSWORD: P4ssW0rd
+    DATA_EXTRACTOR_MSSQL_HOST: "mssql"
+    DATA_EXTRACTOR_MSSQL_PORT: "1433"
+    DATA_EXTRACTOR_MSSQL_USER: "sa"
+    DATA_EXTRACTOR_MSSQL_PASSWORD: "P4ssW0rd"
   depends_on:
     - mssql
 

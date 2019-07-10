@@ -19,4 +19,4 @@ COPY pom.xml .
 RUN mvn -q dependency:go-offline
 COPY src src
 COPY codeship/Deploy/deploy.sh .
-ENTRYPOINT [ "/bin/sh" ]
+ENTRYPOINT [ "/bin/bash", "-x" ]
