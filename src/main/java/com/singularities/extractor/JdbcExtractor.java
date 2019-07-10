@@ -1,15 +1,12 @@
 package com.singularities.extractor;
 
 import com.google.common.base.Preconditions;
+import java.util.Properties;
 import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-import java.util.Properties;
-
-/**
- * A extractor of data stored on a JDBC supported source.
- */
+/** A extractor of data stored on a JDBC supported source. */
 @SuppressWarnings("WeakerAccess")
 public final class JdbcExtractor {
   static final String PROPERTY_FETCH_SIZE = "fetchsize";
@@ -18,22 +15,20 @@ public final class JdbcExtractor {
   private final DataFrameReader dataFrameReader;
 
   public JdbcExtractor(DataFrameReader dataFrameReader) {
-    this.dataFrameReader = Preconditions.checkNotNull(
-        dataFrameReader, "DataFrameReader");
+    this.dataFrameReader = Preconditions.checkNotNull(dataFrameReader, "DataFrameReader");
   }
 
   /**
    * Persists the resulting query data into an Apache Parquet file.
    *
-   * @param query      the JDBC query.
-   * @param parquetUrl the URL of the Parquet file.
+   * @param query the JDBC query.
    * @return the extracted dataset of rows.
    */
-  public Dataset<Row> extractIntoParquet(JdbcQuery query, String parquetUrl) {
+  public Dataset<Row> extractIntoDataset(JdbcQuery query) {
     final Properties connectionProperties = query.getConnectionProperties();
     connectionProperties.put(PROPERTY_FETCH_SIZE, String.valueOf(query.getFetchSize()));
     connectionProperties.put(PROPERTY_DRIVER, DRIVER_SQL_SERVER);
-    final Dataset<Row> rows = dataFrameReader.jdbc(
+    return dataFrameReader.jdbc(
         query.getConnectionUrl(),
         query.getTable(),
         query.getColumnName(),
@@ -41,7 +36,5 @@ public final class JdbcExtractor {
         query.getUpperBound(),
         query.getNumPartitions(),
         connectionProperties);
-    rows.write().parquet(parquetUrl);
-    return rows;
   }
 }
